@@ -1,11 +1,15 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 # Create your views here.
-def django_login(request):
-	pass
+def dj_login(request):
+	HttpResponse('Hello World')
 
-def login42(request):
-	pass
+def dj_register(request):
+	HttpResponse('Hello World')
 
-def callback42(request):
-	pass
+def ft_login(request):
+	HttpResponse('Hello World')
+
+def ft_callback(request):
+	HttpResponse('Hello World')

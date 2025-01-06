@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
 
-app_name = 'login'
+app_name = 'user_login'
 urlpatterns = [
-	path('dj/login/', views.django_login, name='django_login'),
-	path('42/login/', views.login42, name='login'),
-	path('42/login/callback/', views.callback42, name='callback'),
+	path('dj/login/', views.dj_login, name='dj_login'),
+	path('dj/register/', views.dj_register, name='dj_register'),
+	path('ft/login/', views.ft_login, name='ft_login'),
+	path('ft/login/callback/', views.ft_callback, name='ft_callback'),
 ]

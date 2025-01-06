@@ -6,6 +6,12 @@
 	<title>Starship Login</title>
 </head>
 <body>
-	<form action="{% url '' %}" method="post"></form>
+	<form action="{% url 'user_login:dj_login' %}" method="post">
+		{% csrf_token %}
+		<input type="text" name="username">
+		<input type="password" name="password">
+		<button type="submit" name="submit">log in</button>
+	</form>
+	<a href="{% url 'user_login:ft_login' %}">log in with 42</a>
 </body>
 </html>

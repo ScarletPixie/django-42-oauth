@@ -3,13 +3,38 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
+from urllib.parse import quote
 
 #	42 AUTH VIEWS
 def ft_login(request):
-	formatted_url = f'{settings.FT_LOGIN_URL}?client_id={settings.FT_CLIENT_ID}&redirect_uri={settings.FT_REDIRECT_URI}&response_type=code'
-	return render(request, 'user_login/login.html', {'FT_LOGIN_URL': formatted_url})
+	escaped_url = quote(settings.FT_REDIRECT_URI, safe='')
+	formatted_url = f'{settings.FT_LOGIN_URL}?client_id={settings.FT_CLIENT_ID}&redirect_uri={escaped_url}&response_type=code'
+	return redirect(formatted_url)
+
+def ft_refresh(request):
+	refresh_token = request.GET.get('refresh_token')
+	next_url = request.GET.get('next')
+	data = {
+		'grant_type': 'refresh_token',
+		'client_id': settings.FT_CLIENT_ID,
+		'client_secret': settings.FT_CLIENT_SECRET,
+		'refresh_token': refresh_token,
+		'redirect_uri': settings.FT_REDIRECT_URI
+	}
+	try:
+		response = requests.post(settings.FT_TOKEN_URL, data=data)
+		if response.status_code == 200:
+			token = response.json()
+			request.session['auth_token'] = token
+			print('success')
+			return redirect(next_url)
+		
+		return JsonResponse(response.json())
+	except Exception as e:
+		return JsonResponse({'error': str(e)}, status=500)
 
 def ft_callback(request):
+	test = request.GET.get('test')
 	authentication_code = request.GET.get('code')
 
 	data = {
@@ -17,37 +42,16 @@ def ft_callback(request):
 		'client_id': settings.FT_CLIENT_ID,
 		'client_secret': settings.FT_CLIENT_SECRET,
 		'code': authentication_code,
-		'redirect_uri': 'http://localhost:8000/auth/ft/login/callback'
+		'redirect_uri': settings.FT_REDIRECT_URI
 	}
 
 	try:
-		response = requests.post('https://api.intra.42.fr/oauth/token', data=data)
+		response = requests.post(settings.FT_TOKEN_URL, data=data)
 		if response.status_code == 200:
-			json = response.json()
-			print(json)
-			request.session['access_token'] = json.get('access_token')
-			return redirect(reverse('user_login:ft_profile'))
-	
+			token = response.json()
+			request.session['auth_token'] = token
+			return JsonResponse(token)
+		
+		return JsonResponse(response.json())
 	except Exception as e:
 		return JsonResponse({'error': str(e)}, status=500)
-
-def ft_profile(request):
-	access_token = request.session.get('access_token')
-	if access_token is None:
-		redirect(reverse('user_login:ft_login'))
-	try:
-		headers = {
-			"Authorization": f'Bearer {access_token}',
-		}
-		response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
-		if response.status_code == 200:
-			json = response.json()
-			print(json)
-		return JsonResponse(json, status=200)
-	except Exception as e:
-		return JsonResponse({'error': str(e)}, status=500)
-	return render(request, 'user_login/profile.html', {'username'})
-
-#	DJ LOGIN
-#def dj_guest_login(request):
-#	pass

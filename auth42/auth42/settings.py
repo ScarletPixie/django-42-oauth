@@ -34,7 +34,8 @@ FT_CLIENT_ID = config('FT_CLIENT_ID')
 FT_CLIENT_SECRET = config('FT_CLIENT_SECRET')
 FT_LOGIN_URL = config('FT_LOGIN_URL')
 FT_REDIRECT_URI = config('FT_REDIRECT_URI')
-
+FT_TOKEN_URL = config('FT_TOKEN_URL')
+FT_API_BASE_URL = config('FT_API_BASE_URL')
 
 
 # Application definition
@@ -46,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'user_login',
+    'user_login',
+    'user_profile',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +134,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'path.to.authentication.SessionTokenAuthentication',
+    ],
+}

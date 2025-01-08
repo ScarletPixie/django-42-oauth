@@ -9,7 +9,8 @@ from .utils import FtRequest, FtAPIRefreshFail, FtAPINotAvailable, FtAPIForbidde
 class RefreshAccessTokenMiddleware:
 	EXCLUDED_PATHS = [
 		reverse('user_login:ft_login'),
-		reverse('user_login:ft_callback')
+		reverse('user_login:ft_callback'),
+		reverse('user_login:ft_logout'),
 	]
 
 	def __init__(self, get_response):

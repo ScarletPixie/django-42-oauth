@@ -4,8 +4,13 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
 from urllib.parse import quote
+from django.contrib.auth import logout
 
 #	42 AUTH VIEWS
+def ft_logout(request):
+	logout(request)
+	return redirect('user_login:ft_login')
+
 def ft_login(request):
 	escaped_url = quote(settings.FT_REDIRECT_URI, safe='')
 	formatted_url = f'{settings.FT_LOGIN_URL}?client_id={settings.FT_CLIENT_ID}&redirect_uri={escaped_url}&response_type=code'

@@ -8,6 +8,14 @@ from django.contrib.auth import logout
 
 #	42 AUTH VIEWS
 def ft_logout(request):
+	url = 'https://api.intra.42.fr/v2/oauth/revoke'
+	data = {
+		'token': request.session.get('auth_token').get('access_token'),
+	}
+	headers = {
+		'Authorization': f"Bearer {request.session.get('auth_token').get('access_token')}",
+	}
+	response = requests.post(url, data=data, headers=headers)
 	logout(request)
 	return redirect('user_login:ft_login')
 

@@ -1,8 +1,5 @@
-import requests
-
 from django.conf import settings
 from ft_utils.utils import FtRequest
-from urllib.parse import quote
 
 # Create your views here.
 def ft_profile(request):

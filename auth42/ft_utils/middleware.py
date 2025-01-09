@@ -1,5 +1,4 @@
 import time
-import requests
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.urls import reverse

@@ -1,12 +1,7 @@
 import requests
 
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.http import JsonResponse
 from django.conf import settings
-
-from user_login.utils import FtRequest
-
+from ft_utils.utils import FtRequest
 from urllib.parse import quote
 
 # Create your views here.
